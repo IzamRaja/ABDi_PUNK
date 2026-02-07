@@ -2,10 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import React from 'react';
 
-// FUNGSI PENYELAMAT: Agar App.tsx tidak lagi blank
-export const ArisanProvider = ({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-);
+export const ArisanProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export interface Anggota {
   id: string;
@@ -14,19 +11,10 @@ export interface Anggota {
   kehadiran: 'Hadir' | 'Titip' | 'Absen';
 }
 
-export interface Pemenang {
-  id: string;
-  anggotaId: string;
-  namaAnggota: string;
-  tanggal: string;
-  periode: string;
-  nominalDiterima?: number;
-}
-
 interface ArisanStore {
   anggota: Anggota[];
-  pemenang: Pemenang[];
-  addPemenang: (data: Pemenang) => void;
+  pemenang: any[];
+  addPemenang: (data: any) => void;
   updateAnggota: (id: string, data: Partial<Anggota>) => void;
 }
 
@@ -36,12 +24,9 @@ export const useArisanStore = create<ArisanStore>()(
       anggota: [
         { id: '1', nama: 'Bpk. Ahmad', statusBayar: 'Belum', kehadiran: 'Absen' },
         { id: '2', nama: 'Ibu Fatimah', statusBayar: 'Belum', kehadiran: 'Absen' },
-        { id: '3', nama: 'Bpk. Bambang', statusBayar: 'Belum', kehadiran: 'Absen' },
       ],
       pemenang: [],
-      addPemenang: (data) => set((state) => ({
-        pemenang: [data, ...state.pemenang]
-      })),
+      addPemenang: (data) => set((state) => ({ pemenang: [data, ...state.pemenang] })),
       updateAnggota: (id, data) => set((state) => ({
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
