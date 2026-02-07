@@ -50,7 +50,7 @@ export default function AnggotaPage() {
         {/* HEADER STANDARD */}
         <div className="flex justify-between items-center bg-white p-4 rounded-xl border shadow-sm">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Data Anggota</h1>
+            <h1 className="text-2xl font-bold text-gray-900">DATA ANGGOTA</h1>
             <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
           </div>
           

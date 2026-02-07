@@ -73,7 +73,7 @@ export default function IuranPage() {
         {/* HEADER */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border shadow-sm">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Buku Iuran</h1>
+            <h1 className="text-2xl font-bold text-gray-900">BUKU IURAN</h1>
             <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
           </div>
           

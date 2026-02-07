@@ -62,7 +62,7 @@ export default function SimpanPinjamPage() {
         {/* HEADER - SUDAH BERSIH TANPA IKON */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border shadow-sm">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Simpan Pinjam</h1>
+            <h1 className="text-2xl font-bold text-gray-900">BUKU SIMPAN PINJAM</h1>
             <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
           </div>
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>

@@ -67,7 +67,7 @@ export default function UndianPage() {
              <Gift className="w-16 h-16 text-green-600" />
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-800">Siap Bagikan Kejutan?</h1>
+          <h1 className="text-2xl font-bold text-gray-800">UNDIAN ARISAN</h1>
 
           {/* 2. TOMBOL KOCOK HIJAU TENGAH */}
           {!isSpinning && pemenangBaru.length === 0 && (
@@ -76,7 +76,7 @@ export default function UndianPage() {
                 onClick={handleKocok}
                 className="bg-green-600 hover:bg-green-700 text-white text-xl px-4 py-4 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
              >
-                <Sparkles className="mr-2" /> KOCOK ARISAN
+                <Sparkles className="mr-2" /> Kocok...!
              </Button>
           )}
 

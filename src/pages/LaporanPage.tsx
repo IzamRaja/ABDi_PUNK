@@ -171,7 +171,7 @@ export default function LaporanPage() {
         {/* HEADER */}
         <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Laporan Keuangan</h1>
+            <h1 className="text-2xl font-bold text-gray-900">LAPORAN KEUANGAN</h1>
             <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
           </div>
           <Select value={periode} onValueChange={setPeriode}>
