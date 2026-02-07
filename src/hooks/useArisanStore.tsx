@@ -2,8 +2,10 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import React from 'react';
 
-// FUNGSI PENYELAMAT: Agar App.tsx tidak blank putih
-export const ArisanProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+// FUNGSI PENYELAMAT: Agar App.tsx tidak lagi blank
+export const ArisanProvider = ({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+);
 
 export interface Anggota {
   id: string;
@@ -44,6 +46,6 @@ export const useArisanStore = create<ArisanStore>()(
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
     }),
-    { name: 'arisan-vfinal-secure' }
+    { name: 'arisan-storage-final' }
   )
 );
