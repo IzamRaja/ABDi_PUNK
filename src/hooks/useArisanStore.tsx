@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+// Pastikan export interface ini ada agar halaman lain bisa membacanya
 export interface Anggota {
   id: string;
   nama: string;
@@ -15,14 +16,11 @@ export interface Pemenang {
   tanggal: string;
   periode: string;
   nominalDiterima?: number;
-  totalBiaya?: number;
 }
 
 interface ArisanStore {
   anggota: Anggota[];
   pemenang: Pemenang[];
-  currentUser: string;
-  setCurrentUser: (name: string) => void;
   addPemenang: (data: Pemenang) => void;
   updateAnggota: (id: string, data: Partial<Anggota>) => void;
 }
@@ -36,15 +34,13 @@ export const useArisanStore = create<ArisanStore>()(
         { id: '3', nama: 'Bpk. Bambang', statusBayar: 'Belum', kehadiran: 'Absen' },
       ],
       pemenang: [],
-      currentUser: 'ADMIN',
-      setCurrentUser: (name) => set({ currentUser: name }),
-      updateAnggota: (id, data) => set((state) => ({
-        anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
-      })),
       addPemenang: (data) => set((state) => ({
         pemenang: [data, ...state.pemenang]
       })),
+      updateAnggota: (id, data) => set((state) => ({
+        anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
+      })),
     }),
-    { name: 'arisan-storage' }
+    { name: 'arisan-storage-v2' } // Versi baru agar tidak bentrok data lama
   )
 );
