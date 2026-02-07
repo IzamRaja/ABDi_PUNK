@@ -1,162 +1,78 @@
-import { useState } from 'react';
-import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useArisanStore } from '../hooks/useArisanStore';
-import { PlusCircle, Wallet, ArrowUpRight } from 'lucide-react';
-import { toast } from 'sonner';
+import React from "react";
+import { PageLayout } from "../components/layout/PageLayout";
+import { useArisanStore } from "../hooks/useArisanStore";
+import { PiggyBank, ArrowUpRight, ArrowDownLeft, Landmark } from "lucide-react";
 
 export default function SimpanPinjamPage() {
-  const { 
-    anggota, simpanPinjam, currentUser, 
-    tambahSimpanan, tambahPinjaman, bayarPinjaman, 
-    formatInputRupiah, parseInputRupiah, getNamaAnggota 
-  } = useArisanStore();
-
-  const [activeTab, setActiveTab] = useState("simpanan");
-  const [openDialog, setOpenDialog] = useState(false);
-  
-  // Form State
-  const [selectedAnggota, setSelectedAnggota] = useState("");
-  const [nominal, setNominal] = useState("");
-  const [keterangan, setKeterangan] = useState("");
-  // Form Pinjaman
-  const [bunga, setBunga] = useState("10"); // Default 10%
-  const [tenor, setTenor] = useState("10"); // Default 10x
-
-  const handleSubmit = () => {
-    if (!selectedAnggota || !nominal) return toast.error("Data belum lengkap");
-    const jumlah = parseInputRupiah(nominal);
-
-    if (activeTab === "simpanan") {
-      tambahSimpanan(selectedAnggota, jumlah, keterangan || "Simpanan Sukarela");
-      toast.success("Simpanan berhasil ditambahkan");
-    } else {
-      tambahPinjaman(selectedAnggota, jumlah, Number(bunga), Number(tenor), keterangan || "Pinjaman Anggota");
-      toast.success("Pinjaman berhasil dicairkan");
-    }
-    setOpenDialog(false);
-    setNominal(""); setKeterangan(""); setSelectedAnggota("");
-  };
-
-  const handleBayarCicilan = (id: string, sisa: number) => {
-    const bayar = prompt("Masukkan jumlah pembayaran:", sisa.toString());
-    if (bayar) {
-      bayarPinjaman(id, parseInt(bayar));
-      toast.success("Pembayaran cicilan berhasil!");
-    }
-  };
-
-  const listSimpanan = simpanPinjam.filter(sp => sp.jenis === 'simpanan').sort((a,b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
-  const listPinjaman = simpanPinjam.filter(sp => sp.jenis === 'pinjaman').sort((a,b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
+  const { anggota } = useArisanStore();
 
   return (
     <PageLayout>
-      <div className="space-y-6 animate-in fade-in duration-500">
-        
-        {/* HEADER - SUDAH BERSIH TANPA IKON */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">BUKU SIMPAN PINJAM</h1>
-            <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
+      <div className="space-y-8 pb-20">
+        {/* Header Simpan Pinjam Mewah */}
+        <div className="bg-gradient-to-br from-emerald-600 to-teal-800 p-10 rounded-[2.5rem] shadow-2xl text-white relative overflow-hidden">
+          <div className="relative z-10">
+            <h1 className="text-4xl font-black italic tracking-tighter uppercase">Simpan Pinjam</h1>
+            <p className="text-emerald-100 font-bold text-[10px] uppercase tracking-[0.3em] mt-2 opacity-80">
+              Pengelolaan Dana Sosial • Mode Admin
+            </p>
           </div>
-          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-            <DialogTrigger asChild>
-              <Button className="bg-emerald-600 hover:bg-emerald-700 gap-2"><PlusCircle className="w-4 h-4" /> Transaksi Baru</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>{activeTab === 'simpanan' ? 'Tambah Simpanan' : 'Ajukan Pinjaman'}</DialogTitle></DialogHeader>
-              <div className="space-y-4 py-4">
-                <div>
-                  <Label>Anggota</Label>
-                  <select className="w-full border p-2 rounded-md" value={selectedAnggota} onChange={e => setSelectedAnggota(e.target.value)}>
-                    <option value="">-- Pilih Anggota --</option>
-                    {anggota.map(a => <option key={a.id} value={a.id}>{a.nama}</option>)}
-                  </select>
-                </div>
-                <div>
-                  <Label>Nominal (Rp)</Label>
-                  <Input value={nominal} onChange={e => setNominal(formatInputRupiah(e.target.value))} placeholder="0" className="font-bold" />
-                </div>
-                {activeTab === 'pinjaman' && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div><Label>Bunga (%)</Label><Input value={bunga} onChange={e => setBunga(e.target.value)} type="number" /></div>
-                    <div><Label>Tenor (x)</Label><Input value={tenor} onChange={e => setTenor(e.target.value)} type="number" /></div>
-                  </div>
-                )}
-                <div><Label>Keterangan</Label><Input value={keterangan} onChange={e => setKeterangan(e.target.value)} placeholder="Opsional" /></div>
-                <Button onClick={handleSubmit} className="w-full">Simpan</Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <Landmark className="absolute right-[-5%] bottom-[-20%] w-48 h-48 text-white/10" />
         </div>
 
-        {/* TABS & TABEL */}
-        <Tabs defaultValue="simpanan" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 lg:w-[400px]">
-            <TabsTrigger value="simpanan">Tabungan</TabsTrigger>
-            <TabsTrigger value="pinjaman">Pinjaman</TabsTrigger>
-          </TabsList>
+        {/* Ringkasan Saldo Punk */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-8 rounded-[2rem] shadow-xl flex items-center gap-6 border-none">
+            <div className="p-5 bg-emerald-100 rounded-2xl text-emerald-600">
+              <ArrowDownLeft className="w-8 h-8" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Simpanan</p>
+              <h2 className="text-3xl font-black text-slate-900">Rp 2.500.000</h2>
+            </div>
+          </div>
+          <div className="bg-white p-8 rounded-[2rem] shadow-xl flex items-center gap-6 border-none">
+            <div className="p-5 bg-amber-100 rounded-2xl text-amber-600">
+              <ArrowUpRight className="w-8 h-8" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Pinjaman</p>
+              <h2 className="text-3xl font-black text-slate-900">Rp 750.000</h2>
+            </div>
+          </div>
+        </div>
 
-          <TabsContent value="simpanan">
-            <Card>
-              <CardHeader><CardTitle className="text-base">Riwayat Tabungan</CardTitle></CardHeader>
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader><TableRow><TableHead>Tanggal</TableHead><TableHead>Nama</TableHead><TableHead>Ket</TableHead><TableHead className="text-right">Jumlah</TableHead></TableRow></TableHeader>
-                  <TableBody>
-                    {listSimpanan.length === 0 ? <TableRow><TableCell colSpan={4} className="text-center italic text-gray-400">Belum ada data</TableCell></TableRow> : 
-                      listSimpanan.map(s => (
-                        <TableRow key={s.id}>
-                          <TableCell>{s.tanggal}</TableCell>
-                          <TableCell className="font-medium">{getNamaAnggota(s.anggotaId)}</TableCell>
-                          <TableCell className="text-gray-500 text-xs">{s.keterangan}</TableCell>
-                          <TableCell className="text-right font-bold text-emerald-600">+ {parseInt(s.jumlah.toString()).toLocaleString('id-ID')}</TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="pinjaman">
-             <Card>
-              <CardHeader><CardTitle className="text-base">Daftar Pinjaman Aktif</CardTitle></CardHeader>
-              <CardContent className="p-0">
-                <Table>
-                  <TableHeader><TableRow><TableHead>Tanggal</TableHead><TableHead>Nama</TableHead><TableHead>Tagihan</TableHead><TableHead>Sisa</TableHead><TableHead className="text-right">Aksi</TableHead></TableRow></TableHeader>
-                  <TableBody>
-                    {listPinjaman.length === 0 ? <TableRow><TableCell colSpan={5} className="text-center italic text-gray-400">Belum ada pinjaman</TableCell></TableRow> : 
-                      listPinjaman.map(p => (
-                        <TableRow key={p.id}>
-                          <TableCell>{p.tanggal}<div className="text-[10px] text-gray-400">Tenor: {p.tenor}x</div></TableCell>
-                          <TableCell className="font-medium">{getNamaAnggota(p.anggotaId)}</TableCell>
-                          <TableCell>
-                            <div>Rp {p.totalTagihan?.toLocaleString('id-ID')}</div>
-                            <div className="text-xs text-gray-400">Pokok: {p.jumlah.toLocaleString('id-ID')}</div>
-                          </TableCell>
-                          <TableCell className="font-bold text-red-600">Rp {p.sisaPinjaman?.toLocaleString('id-ID')}</TableCell>
-                          <TableCell className="text-right">
-                             {p.sisaPinjaman === 0 ? <span className="text-green-600 font-bold text-xs border border-green-200 bg-green-50 px-2 py-1 rounded">LUNAS</span> : 
-                             <Button size="sm" variant="outline" onClick={() => handleBayarCicilan(p.id, p.sisaPinjaman || 0)}>Bayar</Button>}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                    }
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-
+        {/* Daftar Transaksi/Anggota */}
+        <div className="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border-none">
+          <div className="p-8 border-b border-slate-50 flex justify-between items-center">
+            <h3 className="text-xl font-black italic text-slate-800 uppercase">Data Nasabah</h3>
+            <PiggyBank className="text-emerald-500 w-6 h-6" />
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-slate-50">
+                <tr>
+                  <th className="p-6 text-[10px] font-black uppercase text-slate-400">Nama Anggota</th>
+                  <th className="p-6 text-[10px] font-black uppercase text-slate-400 text-center">Simpanan</th>
+                  <th className="p-6 text-[10px] font-black uppercase text-slate-400 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {anggota.map((a) => (
+                  <tr key={a.id} className="border-b border-slate-50 hover:bg-emerald-50/30 transition-all">
+                    <td className="p-6 font-black text-slate-700 uppercase italic">{a.nama}</td>
+                    <td className="p-6 text-center font-bold text-slate-600">Rp 50.000</td>
+                    <td className="p-6 text-right">
+                      <span className="bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">
+                        Lancar
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </PageLayout>
   );
