@@ -24,7 +24,6 @@ export default function App() {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
-              {/* Langsung ke Dashboard & Fitur tanpa Login */}
               <Route path="/" element={<Dashboard />} />
               <Route path="/anggota" element={<AnggotaPage />} />
               <Route path="/iuran" element={<IuranPage />} />

@@ -1,60 +1,56 @@
-import { useState } from 'react';
-import { PageLayout } from '../components/layout/PageLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { useArisanStore } from '../hooks/useArisanStore';
-import { Gift, RotateCcw, CheckCircle2 } from 'lucide-react';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { PageLayout } from "../components/layout/PageLayout";
+import { useArisanStore } from "../hooks/useArisanStore";
+import { Trophy, Dices, RefreshCcw } from "lucide-react";
+import { toast } from "sonner";
 
 export default function UndianPage() {
-  const { anggota, pemenang, addPemenang } = useArisanStore();
-  const [jumlah, setJumlah] = useState(0);
-  const [terima, setTerima] = useState(0);
-  const [hasil, setHasil] = useState<any[]>([]);
-  const [isDone, setIsDone] = useState(false);
+  const { anggota, addPemenang } = useArisanStore();
+  const [isSpinning, setIsSpinning] = useState(false);
+  const [winner, setWinner] = useState<string | null>(null);
 
-  const kocok = () => {
-    if (jumlah <= 0) return toast.error("Isi jumlah!");
-    const belum = anggota.filter(a => !pemenang.some(p => p.anggotaId === a.id));
-    const t1 = belum.filter(a => a.statusBayar === 'Lunas' && a.kehadiran === 'Hadir');
-    const t2 = belum.filter(a => a.statusBayar === 'Lunas' && a.kehadiran === 'Titip');
-    let pool = [...t1];
-    if (pool.length < jumlah) pool = [...pool, ...t2];
-    setHasil(pool.sort(() => 0.5 - Math.random()).slice(0, jumlah));
-    setIsDone(true);
-  };
+  const kocokArisan = () => {
+    const kandidat = anggota.filter(a => a.statusBayar === 'Lunas');
+    if (kandidat.length === 0) return toast.error("Tidak ada anggota yang lunas!");
 
-  const simpan = () => {
-    hasil.forEach(h => addPemenang({ id: Math.random().toString(), anggotaId: h.id, namaAnggota: h.nama, tanggal: "07/02", periode: "Feb", nominalDiterima: terima }));
-    setHasil([]); setIsDone(false); toast.success("Sah!");
+    setIsSpinning(true);
+    setTimeout(() => {
+      const hasil = kandidat[Math.floor(Math.random() * kandidat.length)];
+      setWinner(hasil.nama);
+      addPemenang({ id: Date.now().toString(), namaAnggota: hasil.nama, tanggal: new Date().toLocaleDateString() });
+      setIsSpinning(false);
+      toast.success(`Selamat kepada ${hasil.nama}!`);
+    }, 2000);
   };
 
   return (
     <PageLayout>
-      <div className="max-w-2xl mx-auto space-y-8 pb-20">
-        <div className="flex justify-center">
-          <div className="w-40 h-40 bg-white border-4 rounded-3xl flex items-center justify-center shadow-inner">
-            <Gift strokeWidth={1} className={`w-24 h-24 ${isDone ? 'text-amber-500' : 'text-slate-200'}`} />
+      <div className="max-w-4xl mx-auto space-y-10 text-center pb-20">
+        <h1 className="text-5xl font-black italic tracking-tighter text-slate-900">UNDIAN BERHADIAH</h1>
+        
+        <div className="bg-white p-12 rounded-[3rem] shadow-2xl border-none relative overflow-hidden">
+          <div className="relative z-10 space-y-8">
+            <div className={`w-40 h-40 mx-auto rounded-full flex items-center justify-center transition-all ${isSpinning ? 'bg-emerald-500 animate-spin' : 'bg-slate-100'}`}>
+              <Trophy className={`w-20 h-20 ${isSpinning ? 'text-white' : 'text-slate-300'}`} />
+            </div>
+            
+            <div className="h-20 flex items-center justify-center">
+              {winner && !isSpinning ? (
+                <h2 className="text-4xl font-black italic text-emerald-600 uppercase">{winner}</h2>
+              ) : (
+                <p className="text-slate-400 font-bold uppercase tracking-widest italic">Siapakah pemenangnya?</p>
+              )}
+            </div>
+
+            <button 
+              onClick={kocokArisan}
+              disabled={isSpinning}
+              className="w-full h-20 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[1.5rem] text-2xl font-black italic shadow-xl shadow-emerald-200 flex items-center justify-center gap-4 active:scale-95 transition-all disabled:opacity-50"
+            >
+              <Dices /> {isSpinning ? "MENGOCOK..." : "MULAI UNDIAN"}
+            </button>
           </div>
         </div>
-        <Card className="rounded-3xl shadow-xl p-8 space-y-6">
-          <Input type="number" value={jumlah} onChange={e => setJumlah(Number(e.target.value))} className="text-center text-4xl font-black h-20 rounded-2xl" />
-          <div className="grid grid-cols-2 gap-4">
-             <Input type="number" placeholder="Uang Diterima" onChange={e => setTerima(Number(e.target.value))} />
-             <Input type="number" placeholder="Total Keluar" />
-          </div>
-          <div className="flex flex-col gap-3">
-            <Button onClick={kocok} className={`h-14 rounded-2xl font-bold ${isDone ? 'bg-red-600' : 'bg-emerald-600'}`}>
-              {isDone ? "KOCOK ULANG" : "KOCOK"}
-            </Button>
-            <Button onClick={simpan} disabled={!isDone} className="h-20 rounded-2xl bg-amber-500 text-2xl font-black">PEMENANG</Button>
-          </div>
-        </Card>
-        {isDone && <div className="grid gap-2">{hasil.map((h, i) => <div key={i} className="bg-white p-4 border-2 border-amber-200 rounded-xl font-black">{h.nama}</div>)}</div>}
-        <Card className="rounded-3xl border-none shadow-lg"><CardHeader><CardTitle className="text-sm">RIWAYAT</CardTitle></CardHeader>
-          <CardContent>{pemenang.map(p => <div key={p.id} className="flex justify-between py-2 border-b font-bold"><span>{p.namaAnggota}</span><span className="text-emerald-600">Rp {p.nominalDiterima?.toLocaleString()}</span></div>)}</CardContent>
-        </Card>
       </div>
     </PageLayout>
   );
