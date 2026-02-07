@@ -1,7 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-// Pastikan export interface ini ada agar halaman lain bisa membacanya
 export interface Anggota {
   id: string;
   nama: string;
@@ -41,6 +40,6 @@ export const useArisanStore = create<ArisanStore>()(
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
     }),
-    { name: 'arisan-storage-v2' } // Versi baru agar tidak bentrok data lama
+    { name: 'arisan-v3' }
   )
 );
