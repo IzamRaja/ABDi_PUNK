@@ -22,7 +22,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-600 p-6">
       <Card className="w-full max-w-xs rounded-3xl bg-white p-8">
-        <CardContent className="space-y-6 text-center">
+        <CardContent className="space-y-6 text-center p-0">
           <h2 className="text-xl font-black uppercase italic text-blue-600">ABDi PUNK</h2>
           <form onSubmit={handleLogin} className="space-y-4">
             <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Nama Arisan..." className="text-center font-bold" />

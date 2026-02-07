@@ -33,6 +33,6 @@ export const useArisanStore = create<ArisanStore>()(
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
     }),
-    { name: 'arisan-storage-final' }
+    { name: 'arisan-v-fix' }
   )
 );
