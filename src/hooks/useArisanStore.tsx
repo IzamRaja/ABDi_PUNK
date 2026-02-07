@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import React from 'react';
+import React from 'react'; // Pastikan import React ada
 
-// PROVIDER: Menghilangkan blank putih di App.tsx
+// PROVIDER: Agar App.tsx tidak crash/blank
 export const ArisanProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export interface Anggota {
@@ -12,22 +12,13 @@ export interface Anggota {
   kehadiran: 'Hadir' | 'Titip' | 'Absen';
 }
 
-export interface Pemenang {
-  id: string;
-  anggotaId: string;
-  namaAnggota: string;
-  tanggal: string;
-  periode: string;
-  nominalDiterima?: number;
-}
-
 interface ArisanStore {
   anggota: Anggota[];
-  pemenang: Pemenang[];
+  pemenang: any[];
   currentUser: string | null;
-  login: (user: string) => void; // KUNCI LOGIN
+  login: (user: string) => void; // Fungsi Login
   logout: () => void;
-  addPemenang: (data: Pemenang) => void;
+  addPemenang: (data: any) => void;
   updateAnggota: (id: string, data: Partial<Anggota>) => void;
 }
 
@@ -43,13 +34,11 @@ export const useArisanStore = create<ArisanStore>()(
       currentUser: null,
       login: (user) => set({ currentUser: user }),
       logout: () => set({ currentUser: null }),
-      addPemenang: (data) => set((state) => ({
-        pemenang: [data, ...state.pemenang]
-      })),
+      addPemenang: (data) => set((state) => ({ pemenang: [data, ...state.pemenang] })),
       updateAnggota: (id, data) => set((state) => ({
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
     }),
-    { name: 'arisan-storage-final-v1' }
+    { name: 'arisan-storage-final-fixed' } // Ganti nama agar storage bersih
   )
 );
