@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; // Tambahkan ini agar tidak error!
 import { useNavigate } from "react-router-dom";
 import { useArisanStore } from "../hooks/useArisanStore";
 import { Button } from "../components/ui/button";
@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim().length < 2) return toast.error("Minimal 2 karakter!");
+    if (username.trim().length < 2) return toast.error("Nama Arisan wajib diisi!");
     login(username);
     toast.success("Berhasil Masuk");
     navigate("/");
@@ -21,11 +21,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-600 p-6">
-      <Card className="w-full max-w-xs rounded-3xl bg-white p-8">
+      <Card className="w-full max-w-xs rounded-3xl bg-white p-6 shadow-2xl">
         <CardContent className="space-y-6 text-center p-0">
           <h2 className="text-xl font-black uppercase italic text-blue-600">ABDi PUNK</h2>
           <form onSubmit={handleLogin} className="space-y-4">
-            <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Nama Arisan..." className="text-center font-bold" />
+            <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Nama Arisan..." className="text-center font-bold h-12" />
             <Button type="submit" className="w-full h-12 bg-blue-600 font-black rounded-xl text-white">MASUK</Button>
           </form>
         </CardContent>

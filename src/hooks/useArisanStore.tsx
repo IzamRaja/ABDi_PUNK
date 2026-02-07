@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import React from 'react';
 
+// PROVIDER: Menghilangkan blank putih di App.tsx
 export const ArisanProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
 export interface Anggota {
@@ -30,9 +31,9 @@ export const useArisanStore = create<ArisanStore>()(
       login: (user) => set({ currentUser: user }),
       logout: () => set({ currentUser: null }),
       updateAnggota: (id, data) => set((state) => ({
-        anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
+        anggota: state.anggota.map((a) => (a.id === id ? { ...a, ...data } : a)),
       })),
     }),
-    { name: 'arisan-v-fix' }
+    { name: 'arisan-storage-final-sync' }
   )
 );
