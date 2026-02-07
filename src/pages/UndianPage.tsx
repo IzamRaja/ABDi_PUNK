@@ -64,7 +64,7 @@ export default function UndianPage() {
           
           {/* 1. LOGO HADIAH TENGAH */}
           <div className="bg-green-100 p-6 rounded-full shadow-inner animate-in zoom-in">
-             <Gift className="w-26 h-26 text-emerald-500" />
+             <Gift className="w-100 h-100 text-emerald-500" />
           </div>
 
           <h1 className="text-2xl font-bold text-gray-800">UNDIAN ARISAN</h1>
