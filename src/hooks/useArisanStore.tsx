@@ -5,7 +5,7 @@ interface Anggota {
   id: string;
   nama: string;
   statusBayar: 'Lunas' | 'Belum';
-  kehadiran: 'Hadir' | 'Absen'; // Fitur Baru untuk Absensi
+  kehadiran: 'Hadir' | 'Titip' | 'Absen'; // Status kehadiran baru
 }
 
 interface Pemenang {
@@ -30,7 +30,6 @@ interface ArisanStore {
 export const useArisanStore = create<ArisanStore>()(
   persist(
     (set) => ({
-      // Data Awal Anggota
       anggota: [
         { id: '1', nama: 'Bpk. Ahmad', statusBayar: 'Belum', kehadiran: 'Absen' },
         { id: '2', nama: 'Ibu Fatimah', statusBayar: 'Belum', kehadiran: 'Absen' },
@@ -38,13 +37,10 @@ export const useArisanStore = create<ArisanStore>()(
       ],
       pemenang: [],
       currentUser: '',
-
       setCurrentUser: (name) => set({ currentUser: name }),
-
       updateAnggota: (id, data) => set((state) => ({
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
       })),
-
       addPemenang: (data) => set((state) => ({
         pemenang: [data, ...state.pemenang]
       })),
