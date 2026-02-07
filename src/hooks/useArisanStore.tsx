@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-interface Anggota {
+export interface Anggota {
   id: string;
   nama: string;
   statusBayar: 'Lunas' | 'Belum';
-  kehadiran: 'Hadir' | 'Titip' | 'Absen'; // Status kehadiran baru
+  kehadiran: 'Hadir' | 'Titip' | 'Absen';
 }
 
-interface Pemenang {
+export interface Pemenang {
   id: string;
   anggotaId: string;
   namaAnggota: string;
@@ -36,7 +36,7 @@ export const useArisanStore = create<ArisanStore>()(
         { id: '3', nama: 'Bpk. Bambang', statusBayar: 'Belum', kehadiran: 'Absen' },
       ],
       pemenang: [],
-      currentUser: '',
+      currentUser: 'ADMIN',
       setCurrentUser: (name) => set({ currentUser: name }),
       updateAnggota: (id, data) => set((state) => ({
         anggota: state.anggota.map((a) => a.id === id ? { ...a, ...data } : a)
