@@ -13,11 +13,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "types": ["node"],
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src"]
 }
