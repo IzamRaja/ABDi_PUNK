@@ -6,10 +6,14 @@ import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "./components/ui/sonner";
 import { TooltipProvider } from "./components/ui/tooltip";
 
+// Import Semua Halaman Asli
 import Dashboard from "./pages/Dashboard";
+import AnggotaPage from "./pages/AnggotaPage";
 import IuranPage from "./pages/IuranPage";
-import UndianPage from "./pages/UndianPage";
 import NotulensiPage from "./pages/NotulensiPage";
+import UndianPage from "./pages/UndianPage";
+import LaporanPage from "./pages/LaporanPage";
+import SimpanPinjamPage from "./pages/SimpanPinjamPage";
 
 const queryClient = new QueryClient();
 
@@ -20,10 +24,14 @@ export default function App() {
         <TooltipProvider>
           <BrowserRouter>
             <Routes>
+              {/* Langsung ke Dashboard & Fitur tanpa Login */}
               <Route path="/" element={<Dashboard />} />
+              <Route path="/anggota" element={<AnggotaPage />} />
               <Route path="/iuran" element={<IuranPage />} />
-              <Route path="/undian" element={<UndianPage />} />
               <Route path="/notulensi" element={<NotulensiPage />} />
+              <Route path="/undian" element={<UndianPage />} />
+              <Route path="/laporan" element={<LaporanPage />} />
+              <Route path="/simpan-pinjam" element={<SimpanPinjamPage />} />
               <Route path="*" element={<Dashboard />} />
             </Routes>
           </BrowserRouter>

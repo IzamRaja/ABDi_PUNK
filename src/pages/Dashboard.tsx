@@ -1,88 +1,44 @@
-import { PageLayout } from '@/components/layout/PageLayout';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useArisanStore } from '../hooks/useArisanStore';
-import { Wallet, PiggyBank, Users, CreditCard, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import React from "react";
+import { PageLayout } from "../components/layout/PageLayout";
+import { useArisanStore } from "../hooks/useArisanStore";
+import { Users, Wallet, Trophy, ClipboardCheck } from "lucide-react";
 
 export default function Dashboard() {
-  const { saldo, anggota, simpanPinjam, currentUser, logout } = useArisanStore();
+  const { anggota, pemenang } = useArisanStore();
 
-  const formatRupiah = (num: number) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num);
-
-  // Hitung Real Piutang
-  const realPiutang = simpanPinjam
-    .filter(sp => sp.jenis === 'pinjaman')
-    .reduce((sum, sp) => sum + (sp.sisaPinjaman || 0), 0);
+  const stats = [
+    { label: "Total Anggota", val: anggota?.length || 0, icon: Users, color: "text-emerald-600", bg: "bg-emerald-50" },
+    { label: "Pemenang", val: pemenang?.length || 0, icon: Trophy, color: "text-amber-500", bg: "bg-amber-50" },
+    { label: "Kehadiran", val: anggota?.filter(a => a.kehadiran === 'Hadir').length || 0, icon: ClipboardCheck, color: "text-blue-500", bg: "bg-blue-50" },
+    { label: "Sudah Bayar", val: anggota?.filter(a => a.statusBayar === 'Lunas').length || 0, icon: Wallet, color: "text-indigo-600", bg: "bg-indigo-50" },
+  ];
 
   return (
     <PageLayout>
-      <div className="space-y-8 animate-in fade-in duration-500">
-        
-        {/* HEADER STANDARD */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-4 rounded-xl border shadow-sm">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">DASHBOARD</h1>
-            <p className="text-gray-500 text-sm uppercase font-bold">{currentUser}</p>
+      <div className="space-y-8 pb-10">
+        {/* Header Mewah */}
+        <div className="bg-gradient-to-r from-emerald-600 to-teal-700 p-10 rounded-[2.5rem] shadow-2xl text-white relative overflow-hidden">
+          <div className="relative z-10">
+            <h1 className="text-4xl font-black italic tracking-tighter">ABDi PUNK</h1>
+            <p className="text-emerald-100 font-bold uppercase tracking-widest text-xs mt-1">Asisten Buku Digital Punk • Admin Mode</p>
           </div>
-          
-          <Button variant="destructive" onClick={logout} className="gap-2">
-            <LogOut className="w-4 h-4" /> Keluar
-          </Button>
+          <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
         </div>
 
-        {/* BARIS KOTAK STATISTIK (4 Kotak yang Identik) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          
-          {/* KAS TUNAI */}
-          <Card className="shadow-md border-t-4 border-t-blue-600">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-blue-100 rounded-xl"><Wallet className="w-6 h-6 text-blue-600" /></div>
-                <Badge variant="secondary" className="bg-blue-50 text-blue-700">Kas Tunai</Badge>
+        {/* Grid Stats Asli */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((s, i) => (
+            <div key={i} className="bg-white p-8 rounded-[2rem] border-none shadow-xl shadow-slate-200/50 flex flex-col items-center gap-4 transition-transform hover:scale-105">
+              <div className={`p-4 ${s.bg} rounded-2xl`}>
+                <s.icon className={`w-8 h-8 ${s.color}`} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800">{formatRupiah(saldo.saldoKas)}</h3>
-              <p className="text-xs text-gray-400 mt-2">Saldo Real (Fisik)</p>
-            </CardContent>
-          </Card>
-          
-          {/* TABUNGAN */}
-          <Card className="shadow-md border-t-4 border-t-purple-600">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-purple-100 rounded-xl"><PiggyBank className="w-6 h-6 text-purple-600" /></div>
-                <Badge variant="secondary" className="bg-purple-50 text-purple-700">Tabungan</Badge>
+              <div className="text-center">
+                <p className="text-[10px] font-black uppercase text-slate-400 tracking-tighter">{s.label}</p>
+                <h3 className="text-3xl font-black text-slate-900">{s.val}</h3>
               </div>
-              <h3 className="text-2xl font-bold text-gray-800">{formatRupiah(saldo.totalSimpanan)}</h3>
-              <p className="text-xs text-gray-400 mt-2">Total Milik Anggota</p>
-            </CardContent>
-          </Card>
-          
-          {/* PIUTANG */}
-          <Card className="shadow-md border-t-4 border-t-orange-500">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-orange-100 rounded-xl"><CreditCard className="w-6 h-6 text-orange-600" /></div>
-                <Badge variant="secondary" className="bg-orange-50 text-orange-700">Piutang</Badge>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800">{formatRupiah(realPiutang)}</h3>
-              <p className="text-xs text-gray-400 mt-2">Sisa Tagihan Pinjaman</p>
-            </CardContent>
-          </Card>
-
-          {/* TOTAL ANGGOTA (Sekarang Identik dengan Kotak Lain) */}
-          <Card className="shadow-md border-t-4 border-t-emerald-500">
-            <CardContent className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-3 bg-emerald-100 rounded-xl"><Users className="w-6 h-6 text-emerald-600" /></div>
-                <Badge variant="secondary" className="bg-emerald-50 text-emerald-700">Anggota</Badge>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800">{anggota.length} Orang</h3>
-              <p className="text-xs text-gray-400 mt-2">Warga Dusun Terdaftar</p>
-            </CardContent>
-          </Card>
+            </div>
+          ))}
         </div>
-
       </div>
     </PageLayout>
   );
